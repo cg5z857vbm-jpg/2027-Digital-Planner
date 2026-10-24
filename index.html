@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🗓️2027 Life & Transition Digital Planner</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Google Fonts: Playfair Display + Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            sage: {
+              50: '#F4F7F4',
+              100: '#E8EFE8',
+              200: '#D1DFC0',
+              300: '#BAC2B8',
+              500: '#8A9A86',
+              700: '#536550',
+              800: '#3A4D39',
+              900: '#233022',
+            },
+            cream: {
+              50: '#FBF9F5',
+              100: '#F5F0E6',
+              200: '#EAE1D2',
+              300: '#DFD2BD',
+            },
+            earth: {
+              dark: '#2D312E',
+              muted: '#636864',
+              light: '#8C928E',
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Default Light Mode Theme Variables */
+    :root {
+      --bg-main: #F5F0E6;
+      --card-bg: #FBF9F5;
+      --card-border: #EAE1D2;
+      --text-main: #2D312E;
+      --text-muted: #636864;
+      --input-bg: #FBF9F5;
+      --input-border: #DFD2BD;
+    }
+
+    /* iPad & System Dark Mode Themes */
+    html.dark {
+      --bg-main: #121413;
+      --card-bg: #1B1E1C;
+      --card-border: #2C322E;
+      --text-main: #E2E8E4;
+      --text-muted: #9AA29C;
+      --input-bg: #222724;
+      --input-border: #38423B;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #8A9A86;
+      border-radius: 9999px;
+    }
+
+    .planner-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+      border-radius: 1rem;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .strikethrough-checked:checked + textarea,
+    .strikethrough-checked:checked + span {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+
+    .tab-active {
+      background-color: #3A4D39 !important;
+      color: #FBF9F5 !important;
+    }
+
+    html.dark .tab-active {
+      background-color: #536550 !important;
+      color: #FFFFFF !important;
+    }
+
+    /* Dynamic Auto-Expanding Textareas */
+    textarea.auto-expand {
+      overflow-y: hidden;
+      resize: none;
+      min-height: 2.2rem;
+    }
+
+    input, textarea, select {
+      background-color: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- TOP HEADER & iPad Navigation -->
+  <header class="bg-sage-800 dark:bg-sage-900 text-cream-50 px-4 py-3 shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      
+      <!-- Logo & System Mode Badge -->
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-sage-700 rounded-xl">
+          <i data-lucide="compass" class="w-6 h-6 text-cream-100"></i>
+        </div>
+        <div>
+          <h1 class="font-serif font-semibold text-lg md:text-xl tracking-wide">LIFE ARCHITECT 2027</h1>
+          <p class="text-[10px] text-sage-200 tracking-wider uppercase font-medium">Transition & Roles Planner</p>
+        </div>
+      </div>
+
+      <!-- Main View Nav Tabs -->
+      <nav class="flex items-center space-x-1 md:space-x-2 bg-sage-900/40 p-1.5 rounded-2xl overflow-x-auto max-w-full">
+        <button type="button" id="nav-daily" onclick="switchMainView('daily')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all hover:bg-sage-700/50">
+          <i data-lucide="calendar" class="w-4 h-4"></i>
+          <span>Daily</span>
+        </button>
+        <button type="button" id="nav-monthly" onclick="switchMainView('monthly')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all hover:bg-sage-700/50">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <span>Calendar Grid</span>
+        </button>
+        <button type="button" id="nav-roles" onclick="switchMainView('roles')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all hover:bg-sage-700/50">
+          <i data-lucide="layers" class="w-4 h-4"></i>
+          <span>Roles Hub</span>
+        </button>
+        <button type="button" id="nav-transition" onclick="switchMainView('transition')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all hover:bg-sage-700/50">
+          <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i>
+          <span class="text-amber-200 font-semibold">Transition (Nov '26 - '27)</span>
+        </button>
+      </nav>
+
+      <!-- Date Jump & iPad Theme Switcher -->
+      <div class="flex items-center space-x-2">
+        <button type="button" onclick="toggleThemeMode()" class="p-2 bg-sage-700 hover:bg-sage-600 rounded-xl text-cream-100 transition flex items-center justify-center" title="Toggle iPad Dark/Light Mode">
+          <i data-lucide="sun" id="themeSunIcon" class="w-4 h-4 hidden"></i>
+          <i data-lucide="moon" id="themeMoonIcon" class="w-4 h-4"></i>
+        </button>
+
+        <div class="flex items-center space-x-2 bg-sage-900/60 px-3 py-1.5 rounded-xl border border-sage-700/50 text-xs">
+          <i data-lucide="clock" class="w-4 h-4 text-sage-200"></i>
+          <input type="date" id="globalDatePicker" onchange="onDateSelect(this.value)" class="bg-transparent text-cream-50 focus:outline-none cursor-pointer">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MONTH BAR SELECTOR (Nov 2026 -> Dec 2027) -->
+  <div class="bg-cream-100 dark:bg-sage-900/40 border-b border-cream-200 dark:border-sage-800 px-4 py-2 sticky top-[60px] z-30 shadow-sm overflow-x-auto">
+    <div class="max-w-7xl mx-auto flex items-center space-x-1.5 min-w-max text-xs" id="monthSelectorContainer">
+      <!-- Rendered dynamically -->
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-3 py-4 md:px-6 md:py-6 flex-grow w-full">
+
+    <!-- ==================== 1. DAILY PLANNER VIEW ==================== -->
+    <section id="view-daily" class="space-y-6">
+      
+      <!-- Date Banner Header -->
+      <div class="planner-card p-4 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span id="dayCategoryTag" class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-sage-200 text-sage-800 dark:bg-sage-800 dark:text-sage-100 rounded-full">Transition Phase</span>
+            <span id="dayOfWeekText" class="text-xs font-semibold text-earth-muted">Sunday</span>
+          </div>
+          <h2 id="formattedDateHeading" class="text-2xl md:text-3xl font-serif font-bold mt-1">November 1, 2026</h2>
+          <p class="text-xs text-earth-muted mt-0.5">"Steady daily progress builds lifelong compounding achievements."</p>
+        </div>
+
+        <!-- Water Hydration & Day Navigation -->
+        <div class="flex flex-wrap items-center gap-4 self-stretch md:self-auto justify-between md:justify-end">
+          <div class="p-3 rounded-xl border border-cream-200 dark:border-sage-800 shadow-sm bg-cream-50 dark:bg-sage-900/30">
+            <div class="text-[10px] uppercase font-bold text-earth-muted tracking-wider mb-1 flex items-center justify-between gap-3">
+              <span>Water Hydration Goal</span>
+              <span id="waterCounterText" class="text-sage-800 dark:text-sage-200 font-semibold">0/8</span>
+            </div>
+            <div class="flex items-center space-x-1.5" id="waterGlassesContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-1">
+            <button type="button" onclick="navigateDay(-1)" class="p-2 hover:bg-cream-200 dark:hover:bg-sage-800 rounded-lg transition" title="Previous Day">
+              <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </button>
+            <button type="button" onclick="jumpToToday()" class="px-3 py-1.5 text-xs font-medium bg-sage-100 dark:bg-sage-800 text-sage-800 dark:text-sage-100 rounded-lg transition">
+              Today
+            </button>
+            <button type="button" onclick="navigateDay(1)" class="p-2 hover:bg-cream-200 dark:hover:bg-sage-800 rounded-lg transition" title="Next Day">
+              <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Daily Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- LEFT COLUMN: Priorities & Timeline -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Top 3 Priorities -->
+          <div class="planner-card p-5 border-l-4 border-l-sage-500">
+            <h3 class="font-serif font-semibold text-base mb-3 flex items-center space-x-2">
+              <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-400"></i>
+              <span>Top 3 Non-Negotiables</span>
+            </h3>
+            <div class="space-y-2.5" id="topPrioritiesContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Hourly Timeline -->
+          <div class="planner-card p-5">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="font-serif font-semibold text-base flex items-center space-x-2">
+                <i data-lucide="clock" class="w-4 h-4 text-sage-700 dark:text-sage-300"></i>
+                <span>Hourly Timeline</span>
+              </h3>
+              <span class="text-[10px] text-earth-muted">6:00 AM – 10:00 PM</span>
+            </div>
+            <div class="space-y-2 max-h-[500px] overflow-y-auto pr-1" id="hourlyTimelineContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Action Items by Role & Reflection -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Role-Based Tasks -->
+          <div class="planner-card p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-cream-200 dark:border-sage-800 pb-3">
+              <div>
+                <h3 class="font-serif font-semibold text-lg">Action Items by Role</h3>
+                <p class="text-xs text-earth-muted">Manage your daily targets cleanly</p>
+              </div>
+
+              <!-- Filter Tabs -->
+              <div class="flex flex-wrap gap-1 p-1 rounded-xl text-xs bg-cream-100 dark:bg-sage-900/60" id="roleFilterTabs">
+                <button type="button" onclick="filterRoleTasks('all')" class="role-tab px-2.5 py-1 rounded-lg font-medium tab-active" data-role="all">All</button>
+                <button type="button" onclick="filterRoleTasks('academic')" class="role-tab px-2.5 py-1 rounded-lg font-medium" data-role="academic">Academic</button>
+                <button type="button" onclick="filterRoleTasks('creator')" class="role-tab px-2.5 py-1 rounded-lg font-medium" data-role="creator">StudyTuber</button>
+                <button type="button" onclick="filterRoleTasks('pioneer')" class="role-tab px-2.5 py-1 rounded-lg font-medium" data-role="pioneer">Pioneer</button>
+                <button type="button" onclick="filterRoleTasks('family')" class="role-tab px-2.5 py-1 rounded-lg font-medium" data-role="family">Son/Family</button>
+                <button type="button" onclick="filterRoleTasks('personal')" class="role-tab px-2.5 py-1 rounded-lg font-medium" data-role="personal">Personal</button>
+              </div>
+            </div>
+
+            <!-- Task Input Form -->
+            <form onsubmit="addNewDailyTask(event)" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mb-4">
+              <select id="newTaskRole" class="border rounded-xl px-2.5 py-2 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-sage-500">
+                <option value="academic">🎓 Academic</option>
+                <option value="creator">📹 StudyTuber</option>
+                <option value="pioneer">📖 Ministry</option>
+                <option value="family">🏠 Family</option>
+                <option value="personal">🌱 Personal</option>
+              </select>
+              <textarea id="newTaskInput" rows="1" placeholder="Add a new goal or task..." oninput="autoResizeTextarea(this)" class="auto-expand flex-grow border rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+              <button type="submit" class="bg-sage-800 hover:bg-sage-700 text-cream-50 px-4 py-2 rounded-xl text-xs font-medium transition flex items-center justify-center space-x-1 cursor-pointer">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Add Task</span>
+              </button>
+            </form>
+
+            <div class="space-y-2 min-h-[200px] max-h-[350px] overflow-y-auto pr-1" id="dailyTasksContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Notes, Gratitude & Reflection -->
+          <div class="planner-card p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5 flex items-center space-x-1">
+                <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-500"></i>
+                <span>Daily Gratitude</span>
+              </label>
+              <textarea id="dailyGratitude" oninput="autoResizeTextarea(this); saveDailyNotes();" placeholder="Today I am thankful for..." class="auto-expand w-full border rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider mb-1.5 flex items-center space-x-1">
+                <i data-lucide="book-open" class="w-3.5 h-3.5 text-sage-700 dark:text-sage-300"></i>
+                <span>Evening Reflection & Notes</span>
+              </label>
+              <textarea id="dailyNotes" oninput="autoResizeTextarea(this); saveDailyNotes();" placeholder="Observations, thoughts, progress notes..." class="auto-expand w-full border rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 2. MONTHLY CALENDAR VIEW ==================== -->
+    <section id="view-monthly" class="hidden space-y-6">
+      <div class="planner-card p-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h2 id="monthlyTitle" class="text-2xl font-serif font-bold">November 2026</h2>
+            <p class="text-xs text-earth-muted">Calendar commitments, deadlines, and spiritual goals</p>
+          </div>
+          
+          <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-200">
+              <i data-lucide="sparkles" class="w-3 h-3 mr-1"></i> Transition Period
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-7 gap-1 text-center font-serif font-semibold text-xs text-earth-muted mb-2">
+          <div class="py-1">Sun</div>
+          <div class="py-1">Mon</div>
+          <div class="py-1">Tue</div>
+          <div class="py-1">Wed</div>
+          <div class="py-1">Thu</div>
+          <div class="py-1">Fri</div>
+          <div class="py-1">Sat</div>
+        </div>
+
+        <div id="monthlyGrid" class="grid grid-cols-7 gap-1.5 sm:gap-2">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3. LIFE ROLES & BALANCE HUB ==================== -->
+    <section id="view-roles" class="hidden space-y-6">
+      
+      <!-- Role Navigation Tabs -->
+      <div class="flex items-center space-x-2 border-b border-cream-300 dark:border-sage-800 pb-3 overflow-x-auto">
+        <button type="button" id="hubtab-student" onclick="switchRoleHub('student')" class="hub-tab px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-sage-800 text-cream-50 cursor-pointer">
+          <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+          <span>1. Student Hub</span>
+        </button>
+        <button type="button" id="hubtab-creator" onclick="switchRoleHub('creator')" class="hub-tab px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-cream-100 dark:bg-sage-900 text-earth-dark dark:text-cream-100 hover:bg-cream-200 cursor-pointer">
+          <i data-lucide="youtube" class="w-4 h-4 text-red-600"></i>
+          <span>2. StudyTuber Hub</span>
+        </button>
+        <button type="button" id="hubtab-pioneer" onclick="switchRoleHub('pioneer')" class="hub-tab px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-cream-100 dark:bg-sage-900 text-earth-dark dark:text-cream-100 hover:bg-cream-200 cursor-pointer">
+          <i data-lucide="book-open" class="w-4 h-4 text-sage-700 dark:text-sage-300"></i>
+          <span>3. Pioneer & Ministry</span>
+        </button>
+        <button type="button" id="hubtab-family" onclick="switchRoleHub('family')" class="hub-tab px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-cream-100 dark:bg-sage-900 text-earth-dark dark:text-cream-100 hover:bg-cream-200 cursor-pointer">
+          <i data-lucide="home" class="w-4 h-4 text-amber-700 dark:text-amber-400"></i>
+          <span>4. Oldest Son & Family</span>
+        </button>
+      </div>
+
+      <!-- HUB 1: STUDENT HUB -->
+      <div id="hub-content-student" class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <div class="lg:col-span-2 planner-card p-5">
+            <h3 class="font-serif font-semibold text-base mb-3 flex items-center justify-between">
+              <span class="flex items-center space-x-2">
+                <i data-lucide="file-text" class="w-4 h-4 text-sage-700 dark:text-sage-300"></i>
+                <span>Academic Deadlines & Exams</span>
+              </span>
+              <button type="button" onclick="openModal('academic')" class="text-xs bg-sage-800 hover:bg-sage-700 text-cream-50 px-3 py-1.5 rounded-xl font-medium transition flex items-center space-x-1 cursor-pointer">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Academic Item</span>
+              </button>
+            </h3>
+            
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-cream-200 dark:border-sage-800 text-earth-muted font-semibold">
+                    <th class="pb-2">Subject</th>
+                    <th class="pb-2">Task / Exam</th>
+                    <th class="pb-2">Due Date</th>
+                    <th class="pb-2">Status</th>
+                    <th class="pb-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="academicTableBody" class="divide-y divide-cream-100 dark:divide-sage-800/50">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pomodoro Timer -->
+          <div class="planner-card p-5 space-y-4">
+            <h3 class="font-serif font-semibold text-base flex items-center space-x-2">
+              <i data-lucide="timer" class="w-4 h-4 text-amber-600"></i>
+              <span>Study Focus Timer</span>
+            </h3>
+
+            <div class="p-6 rounded-2xl text-center border border-cream-200 dark:border-sage-800 bg-cream-50 dark:bg-sage-900/40">
+              <div id="timerDisplay" class="font-serif text-4xl font-bold mb-2">25:00</div>
+              <p id="timerLabel" class="text-[10px] uppercase tracking-wider text-sage-700 dark:text-sage-300 font-bold mb-4">Deep Study Mode</p>
+              
+              <div class="flex justify-center space-x-2">
+                <button type="button" id="timerToggleBtn" onclick="togglePomodoroTimer()" class="bg-sage-800 hover:bg-sage-700 text-cream-50 px-4 py-1.5 rounded-xl text-xs font-semibold cursor-pointer">Start Focus</button>
+                <button type="button" onclick="resetPomodoroTimer()" class="bg-cream-200 dark:bg-sage-800 text-earth-dark dark:text-cream-100 px-3 py-1.5 rounded-xl text-xs font-medium cursor-pointer">Reset</button>
+              </div>
+            </div>
+
+            <div class="text-xs space-y-1.5 text-earth-muted">
+              <div class="flex justify-between">
+                <span>Completed Focus Sessions Today:</span>
+                <span id="pomoCount" class="font-bold text-sage-800 dark:text-sage-200">0</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Total Deep Time:</span>
+                <span id="pomoHours" class="font-bold text-sage-800 dark:text-sage-200">0 mins</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HUB 2: STUDYTUBER CREATOR HUB -->
+      <div id="hub-content-creator" class="hidden space-y-6">
+        <div class="planner-card p-5">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+            <div>
+              <h3 class="font-serif font-semibold text-base">StudyTuber Production Pipeline</h3>
+              <p class="text-xs text-earth-muted">Track Youtube video ideas from draft to upload</p>
+            </div>
+            <button type="button" onclick="openModal('creator')" class="bg-sage-800 text-cream-50 px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-sage-700 transition flex items-center space-x-1 cursor-pointer">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>New Video Project</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Ideas -->
+            <div class="p-3 rounded-xl bg-cream-100 dark:bg-sage-900/40">
+              <h4 class="text-xs font-bold uppercase tracking-wider mb-2 flex items-center justify-between">
+                <span>💡 Ideas</span>
+                <span id="count-idea" class="text-[10px] bg-cream-300 dark:bg-sage-800 px-1.5 py-0.5 rounded-full">0</span>
+              </h4>
+              <div id="col-idea" class="space-y-2 min-h-[200px]"></div>
+            </div>
+
+            <!-- Scripting -->
+            <div class="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30">
+              <h4 class="text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+                <span>📝 Scripting</span>
+                <span id="count-script" class="text-[10px] bg-amber-200 dark:bg-amber-800/60 px-1.5 py-0.5 rounded-full">0</span>
+              </h4>
+              <div id="col-script" class="space-y-2 min-h-[200px]"></div>
+            </div>
+
+            <!-- Filming / Editing -->
+            <div class="p-3 rounded-xl bg-blue-50/60 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/30">
+              <h4 class="text-xs font-bold text-blue-900 dark:text-blue-300 uppercase tracking-wider mb-2 flex items-center justify-between">
+                <span>🎬 Editing</span>
+                <span id="count-edit" class="text-[10px] bg-blue-200 dark:bg-blue-800/60 px-1.5 py-0.5 rounded-full">0</span>
+              </h4>
+              <div id="col-edit" class="space-y-2 min-h-[200px]"></div>
+            </div>
+
+            <!-- Published -->
+            <div class="p-3 rounded-xl bg-sage-100/60 dark:bg-sage-900/60 border border-sage-200 dark:border-sage-800">
+              <h4 class="text-xs font-bold text-sage-900 dark:text-sage-200 uppercase tracking-wider mb-2 flex items-center justify-between">
+                <span>🚀 Published</span>
+                <span id="count-published" class="text-[10px] bg-sage-200 dark:bg-sage-800 px-1.5 py-0.5 rounded-full">0</span>
+              </h4>
+              <div id="col-published" class="space-y-2 min-h-[200px]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HUB 3: PIONEER & MINISTRY HUB -->
+      <div id="hub-content-pioneer" class="hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Field Service Log -->
+          <div class="lg:col-span-2 planner-card p-5 space-y-4">
+            <div class="flex justify-between items-center border-b border-cream-200 dark:border-sage-800 pb-3">
+              <div>
+                <h3 class="font-serif font-semibold text-base">Monthly Field Service Log</h3>
+                <p class="text-xs text-earth-muted">Keep accurate records of ministry activity</p>
+              </div>
+              <button type="button" onclick="openModal('pioneer')" class="bg-sage-800 text-cream-50 px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-sage-700 transition flex items-center space-x-1 cursor-pointer">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Log Service Entry</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="p-3 rounded-xl border border-sage-100 dark:border-sage-800 bg-sage-50 dark:bg-sage-900/30 text-center">
+                <span class="text-[10px] uppercase tracking-wider text-earth-muted font-bold block">Total Hours</span>
+                <span id="pioneerTotalHours" class="text-2xl font-serif font-bold text-sage-900 dark:text-sage-200">0</span>
+              </div>
+              <div class="p-3 rounded-xl border border-cream-200 dark:border-sage-800 bg-cream-50 dark:bg-sage-900/20 text-center">
+                <span class="text-[10px] uppercase tracking-wider text-earth-muted font-bold block">Placements</span>
+                <span id="pioneerPlacements" class="text-2xl font-serif font-bold">0</span>
+              </div>
+              <div class="p-3 rounded-xl border border-cream-200 dark:border-sage-800 bg-cream-50 dark:bg-sage-900/20 text-center">
+                <span class="text-[10px] uppercase tracking-wider text-earth-muted font-bold block">Videos</span>
+                <span id="pioneerVideos" class="text-2xl font-serif font-bold">0</span>
+              </div>
+              <div class="p-3 rounded-xl border border-cream-200 dark:border-sage-800 bg-cream-50 dark:bg-sage-900/20 text-center">
+                <span class="text-[10px] uppercase tracking-wider text-earth-muted font-bold block">Return Visits</span>
+                <span id="pioneerRVs" class="text-2xl font-serif font-bold">0</span>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-cream-200 dark:border-sage-800 text-earth-muted font-semibold">
+                    <th class="pb-2">Date</th>
+                    <th class="pb-2">Hours</th>
+                    <th class="pb-2">Placements</th>
+                    <th class="pb-2">RVs</th>
+                    <th class="pb-2">Notes</th>
+                    <th class="pb-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="pioneerTableBody" class="divide-y divide-cream-100 dark:divide-sage-800/50">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bible Studies -->
+          <div class="planner-card p-5 space-y-4">
+            <div class="flex justify-between items-center">
+              <h3 class="font-serif font-semibold text-base flex items-center space-x-2">
+                <i data-lucide="book-marked" class="w-4 h-4 text-sage-700 dark:text-sage-300"></i>
+                <span>Bible Studies</span>
+              </h3>
+              <button type="button" onclick="openModal('bibleStudy')" class="p-1.5 bg-sage-800 hover:bg-sage-700 text-cream-50 rounded-lg text-xs cursor-pointer flex items-center space-x-1" title="Add Bible Student">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+
+            <div class="space-y-3" id="bibleStudiesContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HUB 4: OLDEST SON & FAMILY HUB -->
+      <div id="hub-content-family" class="hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Family Responsibilities Checklist -->
+          <div class="planner-card p-5">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="font-serif font-semibold text-base flex items-center space-x-2">
+                <i data-lucide="home" class="w-4 h-4 text-amber-700 dark:text-amber-400"></i>
+                <span>Oldest Son Duties</span>
+              </h3>
+              <button type="button" onclick="openModal('familyDuty')" class="text-xs bg-sage-800 hover:bg-sage-700 text-cream-50 px-2.5 py-1.5 rounded-xl font-medium transition flex items-center space-x-1 cursor-pointer">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Duty</span>
+              </button>
+            </div>
+            <p class="text-xs text-earth-muted mb-4">Lead by example, assist siblings, and manage home affairs</p>
+
+            <div class="space-y-2" id="familyDutiesContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Family Gatherings -->
+          <div class="planner-card p-5 space-y-4">
+            <div class="flex justify-between items-center">
+              <h3 class="font-serif font-semibold text-base flex items-center space-x-2">
+                <i data-lucide="users" class="w-4 h-4 text-sage-700 dark:text-sage-300"></i>
+                <span>Family Quality Time & Friendships</span>
+              </h3>
+              <button type="button" onclick="openModal('familyEvent')" class="text-xs bg-sage-800 hover:bg-sage-700 text-cream-50 px-2.5 py-1.5 rounded-xl font-medium transition flex items-center space-x-1 cursor-pointer">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Gathering</span>
+              </button>
+            </div>
+
+            <div class="space-y-3" id="familyEventsContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== 4. TRANSITION HUB ==================== -->
+    <section id="view-transition" class="hidden space-y-6">
+      
+      <!-- Banner -->
+      <div class="planner-card p-6 bg-gradient-to-r from-sage-800 to-sage-900 text-cream-50 rounded-2xl relative overflow-hidden">
+        <div class="max-w-2xl relative z-10">
+          <span class="px-3 py-1 bg-amber-400 text-amber-950 font-bold rounded-full text-[10px] uppercase tracking-wider mb-2 inline-block">Bridge Module</span>
+          <h2 class="text-2xl md:text-3xl font-serif font-bold mb-2">2026 → 2027 Transition Hub</h2>
+          <p class="text-xs text-sage-200 leading-relaxed">
+            November & December 2026 form your bridge months. Complete your academic backlogs, schedule YouTube content releases, and align your spiritual pioneer routine before January 1, 2027 starts.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Nov-Dec Milestones -->
+        <div class="planner-card p-5">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="font-serif font-semibold text-base flex items-center space-x-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-sage-700 dark:text-sage-300"></i>
+              <span>Nov & Dec Finish Line</span>
+            </h3>
+            <button type="button" onclick="openModal('transitionGoal')" class="text-xs bg-sage-800 hover:bg-sage-700 text-cream-50 px-2.5 py-1.5 rounded-xl font-medium transition flex items-center space-x-1 cursor-pointer">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Add Goal</span>
+            </button>
+          </div>
+          <p class="text-xs text-earth-muted mb-3">Tasks to clear before January 2027</p>
+
+          <div class="space-y-2.5" id="transitionTasksContainer">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- 2027 Vision Board -->
+        <div class="planner-card p-5">
+          <h3 class="font-serif font-semibold text-base mb-3 flex items-center space-x-2">
+            <i data-lucide="compass" class="w-4 h-4 text-amber-600"></i>
+            <span>2027 Vision by Life Role</span>
+          </h3>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="font-bold text-sage-800 dark:text-sage-200 block mb-1">🎓 Student Goal</label>
+              <textarea id="visionStudent" oninput="autoResizeTextarea(this); saveTransitionVision();" placeholder="Academic target..." class="auto-expand w-full border rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+            </div>
+            <div>
+              <label class="font-bold text-sage-800 dark:text-sage-200 block mb-1">📹 StudyTuber Goal</label>
+              <textarea id="visionCreator" oninput="autoResizeTextarea(this); saveTransitionVision();" placeholder="Content target..." class="auto-expand w-full border rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+            </div>
+            <div>
+              <label class="font-bold text-sage-800 dark:text-sage-200 block mb-1">📖 Pioneer Goal</label>
+              <textarea id="visionPioneer" oninput="autoResizeTextarea(this); saveTransitionVision();" placeholder="Service target..." class="auto-expand w-full border rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+            </div>
+            <div>
+              <label class="font-bold text-sage-800 dark:text-sage-200 block mb-1">🏠 Family Goal</label>
+              <textarea id="visionFamily" oninput="autoResizeTextarea(this); saveTransitionVision();" placeholder="Family role target..." class="auto-expand w-full border rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Year-End Reflection -->
+        <div class="planner-card p-5">
+          <h3 class="font-serif font-semibold text-base mb-3 flex items-center space-x-2">
+            <i data-lucide="feather" class="w-4 h-4 text-rose-500"></i>
+            <span>Mindset & Focus</span>
+          </h3>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="font-medium block mb-1">What to Leave Behind in 2026:</label>
+              <textarea id="transitionLeaveBehind" oninput="autoResizeTextarea(this); saveTransitionVision();" placeholder="Habits or doubts to leave behind..." class="auto-expand w-full border rounded-lg p-2 focus:outline-none focus:ring-1 focus:ring-sage-500"></textarea>
+            </div>
+            <div>
+              <label class="font-medium block mb-1">Core Mantra for 2027:</label>
+              <input type="text" id="transitionMantra" onchange="saveTransitionVision()" placeholder="e.g. FOCUS, FAITH, DISCIPLINE" class="w-full border rounded-lg p-2 font-bold text-sage-900 dark:text-sage-100 uppercase tracking-wider focus:outline-none focus:ring-1 focus:ring-sage-500">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- UNIVERSAL MODAL DIALOG FOR ADDING ITEMS -->
+  <div id="plannerModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+    <div class="planner-card w-full max-w-md p-6 relative bg-cream-50 dark:bg-sage-900 border border-cream-300 dark:border-sage-800 shadow-2xl">
+      <div class="flex justify-between items-center mb-4 border-b border-cream-200 dark:border-sage-800 pb-3">
+        <h3 id="modalTitle" class="font-serif font-bold text-lg">Add New Item</h3>
+        <button type="button" onclick="closeModal()" class="p-1 text-earth-light hover:text-earth-dark dark:hover:text-cream-100 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="modalForm" onsubmit="handleModalSubmit(event)" class="space-y-4">
+        <div id="modalFormFields" class="space-y-3">
+          <!-- Dynamic Form Inputs -->
+        </div>
+
+        <div class="flex justify-end space-x-2 pt-3 border-t border-cream-200 dark:border-sage-800">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-medium bg-cream-200 dark:bg-sage-800 text-earth-dark dark:text-cream-100">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-xl text-xs font-semibold bg-sage-800 hover:bg-sage-700 text-cream-50">Save Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="bg-cream-200 dark:bg-sage-900/60 border-t border-cream-300 dark:border-sage-800 py-3 text-center text-xs text-earth-muted">
+    <p>2027 Digital Life & Transition Planner • Compatible with iPad & Systems Modes • Auto-saved locally</p>
+  </footer>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    const MONTHS = [
+      { key: "2026-11", label: "Nov 2026", year: 2026, month: 10, days: 30, isTransition: true },
+      { key: "2026-12", label: "Dec 2026", year: 2026, month: 11, days: 31, isTransition: true },
+      { key: "2027-01", label: "Jan 2027", year: 2027, month: 0, days: 31 },
+      { key: "2027-02", label: "Feb 2027", year: 2027, month: 1, days: 28 },
+      { key: "2027-03", label: "Mar 2027", year: 2027, month: 2, days: 31 },
+      { key: "2027-04", label: "Apr 2027", year: 2027, month: 3, days: 30 },
+      { key: "2027-05", label: "May 2027", year: 2027, month: 4, days: 31 },
+      { key: "2027-06", label: "Jun 2027", year: 2027, month: 5, days: 30 },
+      { key: "2027-07", label: "Jul 2027", year: 2027, month: 6, days: 31 },
+      { key: "2027-08", label: "Aug 2027", year: 2027, month: 7, days: 31 },
+      { key: "2027-09", label: "Sep 2027", year: 2027, month: 8, days: 30 },
+      { key: "2027-10", label: "Oct 2027", year: 2027, month: 9, days: 31 },
+      { key: "2027-11", label: "Nov 2027", year: 2027, month: 10, days: 30 },
+      { key: "2027-12", label: "Dec 2027", year: 2027, month: 11, days: 31 }
+    ];
+
+    let currentDateStr = "2026-11-01";
+    let activeMainView = "daily";
+    let activeRoleFilter = "all";
+    let activeRoleHub = "student";
+    let activeModalType = null;
+
+    let plannerData = JSON.parse(localStorage.getItem('life_planner_2027_db')) || {
+      days: {},
+      academic: [
+        { id: 1, subject: "Mathematics", task: "Midterm Exam Preparation", due: "2026-11-15", status: "In Progress" },
+        { id: 2, subject: "Physics", task: "Lab Experiment Report #4", due: "2026-11-20", status: "Pending" }
+      ],
+      creator: [
+        { id: 1, title: "Planning 2027 as a Pioneer & Student", stage: "idea" },
+        { id: 2, title: "2-Hour Study With Me Session (4K)", stage: "script" }
+      ],
+      pioneer: [
+        { id: 1, date: "2026-11-01", hours: 3, placements: 2, rvs: 1, notes: "Morning service group" }
+      ],
+      bibleStudies: [
+        { id: 1, name: "Alexander M.", book: "Enjoy Life Forever!", schedule: "Tuesdays 4:00 PM" }
+      ],
+      familyDuties: [
+        { id: 1, title: "Weekly Household Budgeting", done: false },
+        { id: 2, title: "Lead Evening Family Bible Reading", done: false }
+      ],
+      familyEvents: [
+        { id: 1, title: "Sunday Family Dinner", date: "2026-11-08" }
+      ],
+      transitionTasks: [
+        { id: 1, title: "Complete Q4 StudyTuber Content Schedule", done: false },
+        { id: 2, title: "Organize Study Desk and Digital Files", done: false }
+      ],
+      transitionVision: {
+        student: "", creator: "", pioneer: "", family: "", leaveBehind: "", mantra: ""
+      }
+    };
+
+    // Pomodoro Timer
+    let timerInterval = null;
+    let timerSeconds = 25 * 60;
+    let isTimerRunning = false;
+    let pomoCompletedToday = 0;
+
+    window.onload = function() {
+      initSystemTheme();
+      renderMonthBar();
+      updateDatePickerValue();
+      loadDayData(currentDateStr);
+      renderAcademicTable();
+      renderCreatorPipeline();
+      renderPioneerLog();
+      renderBibleStudies();
+      renderFamilyHub();
+      renderTransitionHub();
+      
+      lucide.createIcons();
+      triggerAllAutoResizes();
+    };
+
+    function saveToStorage() {
+      localStorage.setItem('life_planner_2027_db', JSON.stringify(plannerData));
+    }
+
+    /* iPad / System Dark Mode Handler */
+    function initSystemTheme() {
+      const savedTheme = localStorage.getItem('planner_theme');
+      if (savedTheme) {
+        setTheme(savedTheme === 'dark');
+      } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setTheme(prefersDark);
+      }
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('planner_theme')) {
+          setTheme(e.matches);
+        }
+      });
+    }
+
+    function toggleThemeMode() {
+      const isDark = document.documentElement.classList.contains('dark');
+      setTheme(!isDark);
+      localStorage.setItem('planner_theme', !isDark ? 'dark' : 'light');
+    }
+
+    function setTheme(isDark) {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('themeSunIcon').classList.remove('hidden');
+        document.getElementById('themeMoonIcon').classList.add('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('themeSunIcon').classList.add('hidden');
+        document.getElementById('themeMoonIcon').classList.remove('hidden');
+      }
+    }
+
+    /* Auto-expanding text areas */
+    function autoResizeTextarea(el) {
+      if (!el) return;
+      el.style.height = 'auto';
+      el.style.height = (el.scrollHeight) + 'px';
+    }
+
+    function triggerAllAutoResizes() {
+      setTimeout(() => {
+        document.querySelectorAll('textarea').forEach(ta => autoResizeTextarea(ta));
+      }, 50);
+    }
+
+    /* Modals for Reliable Input Adding */
+    function openModal(type) {
+      activeModalType = type;
+      const modal = document.getElementById('plannerModal');
+      const title = document.getElementById('modalTitle');
+      const fields = document.getElementById('modalFormFields');
+
+      fields.innerHTML = '';
+      modal.classList.remove('hidden');
+
+      if (type === 'academic') {
+        title.innerText = "Add Academic Item / Exam";
+        fields.innerHTML = `
+          <div>
+            <label class="block text-xs font-semibold mb-1">Subject</label>
+            <input type="text" id="m_subject" required placeholder="e.g. Mathematics" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Task or Exam Title</label>
+            <input type="text" id="m_task" required placeholder="e.g. Chapter 3 Review" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Due Date</label>
+            <input type="date" id="m_due" value="${currentDateStr}" required class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+        `;
+      } else if (type === 'creator') {
+        title.innerText = "Add StudyTuber Video Project";
+        fields.innerHTML = `
+          <div>
+            <label class="block text-xs font-semibold mb-1">Video Title or Idea</label>
+            <input type="text" id="m_title" required placeholder="e.g. How I Study for Exams" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Initial Stage</label>
+            <select id="m_stage" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+              <option value="idea">💡 Idea</option>
+              <option value="script">📝 Scripting</option>
+              <option value="edit">🎬 Editing</option>
+              <option value="published">🚀 Published</option>
+            </select>
+          </div>
+        `;
+      } else if (type === 'pioneer') {
+        title.innerText = "Log Field Service Activity";
+        fields.innerHTML = `
+          <div>
+            <label class="block text-xs font-semibold mb-1">Date</label>
+            <input type="date" id="m_date" value="${currentDateStr}" required class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-xs font-semibold mb-1">Hours</label>
+              <input type="number" step="0.5" id="m_hours" value="2" required class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1">Placements</label>
+              <input type="number" id="m_placements" value="0" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1">RVs</label>
+              <input type="number" id="m_rvs" value="0" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Notes</label>
+            <input type="text" id="m_notes" placeholder="e.g. Service with group" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+        `;
+      } else if (type === 'bibleStudy') {
+        title.innerText = "Add Bible Student";
+        fields.innerHTML = `
+          <div>
+            <label class="block text-xs font-semibold mb-1">Student Name</label>
+            <input type="text" id="m_name" required placeholder="e.g. John D." class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Publication</label>
+            <input type="text" id="m_book" value="Enjoy Life Forever!" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Weekly Time</label>
+            <input type="text" id="m_schedule" placeholder="e.g. Tuesdays 4 PM" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+        `;
+      } else if (type === 'familyDuty') {
+        title.innerText = "Add Oldest Son Duty";
+        fields.innerHTML = `
+          <div>
+            <label class="block text-xs font-semibold mb-1">Duty Description</label>
+            <input type="text" id="m_title" required placeholder="e.g. Clean living room" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+        `;
+      } else if (type === 'familyEvent') {
+        title.innerText = "Add Family Gathering";
+        fields.innerHTML = `
+          <div>
+            <label class="block text-xs font-semibold mb-1">Gathering Event</label>
+            <input type="text" id="m_title" required placeholder="e.g. Family Sunday Dinner" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Date</label>
+            <input type="date" id="m_date" value="${currentDateStr}" required class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+        `;
+      } else if (type === 'transitionGoal') {
+        title.innerText = "Add Transition Milestone";
+        fields.innerHTML = `
+          <div>
+            <label class="block text-xs font-semibold mb-1">Goal / Task Title</label>
+            <input type="text" id="m_title" required placeholder="e.g. Complete Q4 Prep" class="w-full border rounded-xl p-2 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">
+          </div>
+        `;
+      }
+
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      document.getElementById('plannerModal').classList.add('hidden');
+      activeModalType = null;
+    }
+
+    function handleModalSubmit(e) {
+      e.preventDefault();
+      
+      if (activeModalType === 'academic') {
+        plannerData.academic.push({
+          id: Date.now(),
+          subject: document.getElementById('m_subject').value,
+          task: document.getElementById('m_task').value,
+          due: document.getElementById('m_due').value,
+          status: "Pending"
+        });
+        renderAcademicTable();
+      } else if (activeModalType === 'creator') {
+        plannerData.creator.push({
+          id: Date.now(),
+          title: document.getElementById('m_title').value,
+          stage: document.getElementById('m_stage').value
+        });
+        renderCreatorPipeline();
+      } else if (activeModalType === 'pioneer') {
+        plannerData.pioneer.push({
+          id: Date.now(),
+          date: document.getElementById('m_date').value,
+          hours: Number(document.getElementById('m_hours').value || 0),
+          placements: Number(document.getElementById('m_placements').value || 0),
+          rvs: Number(document.getElementById('m_rvs').value || 0),
+          notes: document.getElementById('m_notes').value || ""
+        });
+        renderPioneerLog();
+      } else if (activeModalType === 'bibleStudy') {
+        plannerData.bibleStudies.push({
+          id: Date.now(),
+          name: document.getElementById('m_name').value,
+          book: document.getElementById('m_book').value || "Enjoy Life Forever!",
+          schedule: document.getElementById('m_schedule').value || "TBD"
+        });
+        renderBibleStudies();
+      } else if (activeModalType === 'familyDuty') {
+        plannerData.familyDuties.push({
+          id: Date.now(),
+          title: document.getElementById('m_title').value,
+          done: false
+        });
+        renderFamilyHub();
+      } else if (activeModalType === 'familyEvent') {
+        plannerData.familyEvents.push({
+          id: Date.now(),
+          title: document.getElementById('m_title').value,
+          date: document.getElementById('m_date').value
+        });
+        renderFamilyHub();
+      } else if (activeModalType === 'transitionGoal') {
+        plannerData.transitionTasks.push({
+          id: Date.now(),
+          title: document.getElementById('m_title').value,
+          done: false
+        });
+        renderTransitionHub();
+      }
+
+      saveToStorage();
+      closeModal();
+    }
+
+    /* Views & Navigation */
+    function switchMainView(viewKey) {
+      activeMainView = viewKey;
+      ['daily', 'monthly', 'roles', 'transition'].forEach(v => {
+        document.getElementById(`view-${v}`).classList.add('hidden');
+        document.getElementById(`nav-${v}`).classList.remove('bg-sage-700', 'text-cream-50');
+      });
+
+      document.getElementById(`view-${viewKey}`).classList.remove('hidden');
+      document.getElementById(`nav-${viewKey}`).classList.add('bg-sage-700', 'text-cream-50');
+
+      if (viewKey === 'monthly') {
+        renderMonthlyGrid();
+      }
+      triggerAllAutoResizes();
+    }
+
+    function renderMonthBar() {
+      const container = document.getElementById('monthSelectorContainer');
+      const currentMonthKey = currentDateStr.substring(0, 7);
+
+      container.innerHTML = MONTHS.map(m => {
+        const isActive = m.key === currentMonthKey;
+        const isTrans = m.isTransition;
+        return `
+          <button type="button" onclick="selectMonthKey('${m.key}')" class="px-3 py-1.5 rounded-xl font-medium transition flex items-center space-x-1 ${
+            isActive ? 'bg-sage-800 text-cream-50 shadow-sm' : 
+            isTrans ? 'bg-amber-100/80 dark:bg-amber-900/40 text-amber-900 dark:text-amber-200' : 'bg-cream-50 dark:bg-sage-900/60 text-earth-dark dark:text-cream-100 hover:bg-cream-200'
+          }">
+            ${isTrans ? '<i data-lucide="sparkles" class="w-3 h-3 text-amber-600"></i>' : ''}
+            <span>${m.label}</span>
+          </button>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function selectMonthKey(monthKey) {
+      currentDateStr = `${monthKey}-01`;
+      updateDatePickerValue();
+      renderMonthBar();
+      loadDayData(currentDateStr);
+      if (activeMainView === 'monthly') renderMonthlyGrid();
+    }
+
+    function onDateSelect(dateVal) {
+      if (!dateVal) return;
+      currentDateStr = dateVal;
+      renderMonthBar();
+      loadDayData(currentDateStr);
+      if (activeMainView === 'monthly') renderMonthlyGrid();
+    }
+
+    function updateDatePickerValue() {
+      document.getElementById('globalDatePicker').value = currentDateStr;
+    }
+
+    function navigateDay(delta) {
+      const date = new Date(currentDateStr);
+      date.setDate(date.getDate() + delta);
+      currentDateStr = date.toISOString().split('T')[0];
+      updateDatePickerValue();
+      renderMonthBar();
+      loadDayData(currentDateStr);
+    }
+
+    function jumpToToday() {
+      currentDateStr = "2026-11-01";
+      updateDatePickerValue();
+      renderMonthBar();
+      loadDayData(currentDateStr);
+    }
+
+    /* Daily Planner */
+    function getOrCreateDayData(dateKey) {
+      if (!plannerData.days[dateKey]) {
+        plannerData.days[dateKey] = {
+          water: 0,
+          priorities: ["", "", ""],
+          hourly: {},
+          tasks: [
+            { id: 1, text: "Morning Devotional & Bible Reading", role: "pioneer", done: false },
+            { id: 2, text: "Study session review", role: "academic", done: false }
+          ],
+          gratitude: "",
+          notes: ""
+        };
+      }
+      return plannerData.days[dateKey];
+    }
+
+    function loadDayData(dateKey) {
+      const dayData = getOrCreateDayData(dateKey);
+      const dateObj = new Date(dateKey + 'T00:00:00');
+      
+      document.getElementById('formattedDateHeading').innerText = dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+      document.getElementById('dayOfWeekText').innerText = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+
+      const isTrans = dateKey.startsWith('2026-11') || dateKey.startsWith('2026-12');
+      const tag = document.getElementById('dayCategoryTag');
+      tag.innerText = isTrans ? "Nov-Dec 2026 Transition" : "2027 Daily Planner";
+
+      renderWaterTracker(dayData.water);
+      renderTopPriorities(dayData.priorities);
+      renderHourlyTimeline(dayData.hourly);
+      renderDailyTasks();
+
+      document.getElementById('dailyGratitude').value = dayData.gratitude || "";
+      document.getElementById('dailyNotes').value = dayData.notes || "";
+      
+      triggerAllAutoResizes();
+    }
+
+    function renderWaterTracker(count) {
+      const container = document.getElementById('waterGlassesContainer');
+      document.getElementById('waterCounterText').innerText = `${count}/8`;
+      
+      let html = '';
+      for (let i = 1; i <= 8; i++) {
+        const filled = i <= count;
+        html += `
+          <button type="button" onclick="toggleWaterGlass(${i})" class="p-1 rounded-lg transition hover:scale-110 cursor-pointer ${filled ? 'text-blue-500' : 'text-cream-300 dark:text-sage-700 hover:text-blue-300'}">
+            <i data-lucide="droplet" class="w-5 h-5 ${filled ? 'fill-blue-400' : ''}"></i>
+          </button>
+        `;
+      }
+      container.innerHTML = html;
+      lucide.createIcons();
+    }
+
+    function toggleWaterGlass(index) {
+      const dayData = getOrCreateDayData(currentDateStr);
+      dayData.water = (dayData.water === index) ? index - 1 : index;
+      saveToStorage();
+      renderWaterTracker(dayData.water);
+    }
+
+    function renderTopPriorities(priorities) {
+      const container = document.getElementById('topPrioritiesContainer');
+      container.innerHTML = [0, 1, 2].map(idx => `
+        <div class="flex items-center space-x-2">
+          <span class="w-5 h-5 rounded-full bg-sage-100 dark:bg-sage-800 text-sage-800 dark:text-sage-100 flex items-center justify-center font-bold text-xs flex-shrink-0">${idx + 1}</span>
+          <textarea rows="1" oninput="autoResizeTextarea(this); savePriority(${idx}, this.value);" placeholder="Priority item ${idx + 1}..." class="auto-expand flex-grow border rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">${priorities[idx] || ''}</textarea>
+        </div>
+      `).join('');
+      triggerAllAutoResizes();
+    }
+
+    function savePriority(index, value) {
+      const dayData = getOrCreateDayData(currentDateStr);
+      dayData.priorities[index] = value;
+      saveToStorage();
+    }
+
+    function renderHourlyTimeline(hourlyMap) {
+      const container = document.getElementById('hourlyTimelineContainer');
+      const hours = [
+        "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+        "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM",
+        "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM"
+      ];
+
+      container.innerHTML = hours.map(h => `
+        <div class="flex items-center space-x-2 text-xs">
+          <span class="w-16 font-medium text-earth-muted text-[11px] flex-shrink-0">${h}</span>
+          <textarea rows="1" oninput="autoResizeTextarea(this); saveHourlySlot('${h}', this.value);" placeholder="—" class="auto-expand flex-grow border rounded-lg px-2.5 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-sage-500">${hourlyMap[h] || ''}</textarea>
+        </div>
+      `).join('');
+      triggerAllAutoResizes();
+    }
+
+    function saveHourlySlot(hour, value) {
+      const dayData = getOrCreateDayData(currentDateStr);
+      dayData.hourly[hour] = value;
+      saveToStorage();
+    }
+
+    function renderDailyTasks() {
+      const dayData = getOrCreateDayData(currentDateStr);
+      const container = document.getElementById('dailyTasksContainer');
+
+      const filtered = dayData.tasks.filter(t => activeRoleFilter === 'all' || t.role === activeRoleFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<p class="text-xs text-earth-muted italic text-center py-6">No tasks added for this category.</p>`;
+        return;
+      }
+
+      const roleBadges = {
+        academic: { label: "Academic", class: "bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200" },
+        creator: { label: "StudyTuber", class: "bg-red-100 dark:bg-red-900/60 text-red-800 dark:text-red-200" },
+        pioneer: { label: "Ministry", class: "bg-sage-200 dark:bg-sage-800 text-sage-900 dark:text-sage-100" },
+        family: { label: "Son/Family", class: "bg-amber-100 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200" },
+        personal: { label: "Personal", class: "bg-purple-100 dark:bg-purple-900/60 text-purple-900 dark:text-purple-200" }
+      };
+
+      container.innerHTML = filtered.map(t => `
+        <div class="flex items-start justify-between p-2.5 border rounded-xl hover:border-sage-400 transition gap-2">
+          <label class="flex items-start space-x-2.5 flex-grow cursor-pointer">
+            <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleDailyTask(${t.id})" class="strikethrough-checked rounded text-sage-700 focus:ring-sage-500 w-4 h-4 mt-0.5 flex-shrink-0">
+            <textarea rows="1" oninput="autoResizeTextarea(this); updateDailyTaskText(${t.id}, this.value);" class="auto-expand bg-transparent border-0 p-0 text-xs w-full focus:outline-none focus:ring-0 ${t.done ? 'line-through opacity-50' : ''}">${t.text}</textarea>
+          </label>
+          <div class="flex items-center space-x-2 flex-shrink-0">
+            <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${roleBadges[t.role]?.class || 'bg-cream-200'}">
+              ${roleBadges[t.role]?.label || t.role}
+            </span>
+            <button type="button" onclick="deleteDailyTask(${t.id})" class="text-earth-light hover:text-rose-600 transition p-1">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+      triggerAllAutoResizes();
+    }
+
+    function addNewDailyTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('newTaskInput');
+      const roleSelect = document.getElementById('newTaskRole');
+      if (!input.value.trim()) return;
+
+      const dayData = getOrCreateDayData(currentDateStr);
+      dayData.tasks.push({
+        id: Date.now(),
+        text: input.value.trim(),
+        role: roleSelect.value,
+        done: false
+      });
+
+      input.value = '';
+      saveToStorage();
+      renderDailyTasks();
+    }
+
+    function updateDailyTaskText(taskId, val) {
+      const dayData = getOrCreateDayData(currentDateStr);
+      const task = dayData.tasks.find(t => t.id === taskId);
+      if (task) {
+        task.text = val;
+        saveToStorage();
+      }
+    }
+
+    function toggleDailyTask(taskId) {
+      const dayData = getOrCreateDayData(currentDateStr);
+      const task = dayData.tasks.find(t => t.id === taskId);
+      if (task) {
+        task.done = !task.done;
+        saveToStorage();
+        renderDailyTasks();
+      }
+    }
+
+    function deleteDailyTask(taskId) {
+      const dayData = getOrCreateDayData(currentDateStr);
+      dayData.tasks = dayData.tasks.filter(t => t.id !== taskId);
+      saveToStorage();
+      renderDailyTasks();
+    }
+
+    function filterRoleTasks(roleKey) {
+      activeRoleFilter = roleKey;
+      document.querySelectorAll('#roleFilterTabs .role-tab').forEach(btn => {
+        if (btn.getAttribute('data-role') === roleKey) {
+          btn.classList.add('tab-active');
+        } else {
+          btn.classList.remove('tab-active');
+        }
+      });
+      renderDailyTasks();
+    }
+
+    function saveDailyNotes() {
+      const dayData = getOrCreateDayData(currentDateStr);
+      dayData.gratitude = document.getElementById('dailyGratitude').value;
+      dayData.notes = document.getElementById('dailyNotes').value;
+      saveToStorage();
+    }
+
+    /* Monthly View */
+    function renderMonthlyGrid() {
+      const container = document.getElementById('monthlyGrid');
+      const currentMonthKey = currentDateStr.substring(0, 7);
+      const monthObj = MONTHS.find(m => m.key === currentMonthKey) || MONTHS[0];
+
+      document.getElementById('monthlyTitle').innerText = `${monthObj.label} Overview`;
+      const firstDayIdx = new Date(monthObj.year, monthObj.month, 1).getDay();
+      
+      let html = '';
+
+      for (let i = 0; i < firstDayIdx; i++) {
+        html += `<div class="min-h-[85px] rounded-xl border border-dashed border-cream-200 dark:border-sage-800/40"></div>`;
+      }
+
+      for (let d = 1; d <= monthObj.days; d++) {
+        const dayString = `${monthObj.key}-${d < 10 ? '0' + d : d}`;
+        const isSelected = dayString === currentDateStr;
+        const dayData = plannerData.days[dayString];
+        const hasTasks = dayData && dayData.tasks && dayData.tasks.length > 0;
+        const taskCount = hasTasks ? dayData.tasks.length : 0;
+
+        html += `
+          <div onclick="selectDayFromGrid('${dayString}')" class="min-h-[85px] p-2 rounded-xl border cursor-pointer transition flex flex-col justify-between ${
+            isSelected ? 'bg-sage-100 dark:bg-sage-800 border-sage-500 shadow-sm' : 'hover:border-sage-400'
+          }">
+            <div class="flex justify-between items-center">
+              <span class="font-serif font-bold text-xs">${d}</span>
+              ${taskCount > 0 ? `<span class="w-2 h-2 rounded-full bg-sage-500"></span>` : ''}
+            </div>
+
+            <div class="space-y-1 my-1">
+              ${hasTasks ? `<p class="text-[10px] text-earth-muted line-clamp-2">${dayData.tasks[0].text}</p>` : ''}
+            </div>
+
+            <div class="text-[9px] text-earth-muted flex justify-between items-center">
+              <span>${taskCount > 0 ? `${taskCount} items` : ''}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function selectDayFromGrid(dateKey) {
+      currentDateStr = dateKey;
+      updateDatePickerValue();
+      switchMainView('daily');
+      loadDayData(currentDateStr);
+    }
+
+    /* Role Hub Switches */
+    function switchRoleHub(hubKey) {
+      activeRoleHub = hubKey;
+      ['student', 'creator', 'pioneer', 'family'].forEach(h => {
+        document.getElementById(`hub-content-${h}`).classList.add('hidden');
+        document.getElementById(`hubtab-${h}`).className = "hub-tab px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-cream-100 dark:bg-sage-900 text-earth-dark dark:text-cream-100 hover:bg-cream-200 cursor-pointer";
+      });
+
+      document.getElementById(`hub-content-${hubKey}`).classList.remove('hidden');
+      document.getElementById(`hubtab-${hubKey}`).className = "hub-tab px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 bg-sage-800 text-cream-50 cursor-pointer";
+      triggerAllAutoResizes();
+    }
+
+    /* Student Hub */
+    function renderAcademicTable() {
+      const tbody = document.getElementById('academicTableBody');
+      tbody.innerHTML = plannerData.academic.map(item => `
+        <tr>
+          <td class="py-2.5 font-medium">${item.subject}</td>
+          <td class="py-2.5 text-earth-muted">${item.task}</td>
+          <td class="py-2.5 text-earth-muted">${item.due}</td>
+          <td class="py-2.5">
+            <button type="button" onclick="toggleAcademicStatus(${item.id})" class="px-2 py-0.5 text-[10px] font-bold rounded-full cursor-pointer ${
+              item.status === 'Completed' ? 'bg-sage-200 dark:bg-sage-800 text-sage-900 dark:text-sage-100' : 'bg-amber-100 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200'
+            }">${item.status}</button>
+          </td>
+          <td class="py-2.5 text-right">
+            <button type="button" onclick="deleteAcademicItem(${item.id})" class="text-earth-light hover:text-rose-600 p-1">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function toggleAcademicStatus(id) {
+      const item = plannerData.academic.find(i => i.id === id);
+      if (item) {
+        item.status = item.status === 'Completed' ? 'Pending' : 'Completed';
+        saveToStorage();
+        renderAcademicTable();
+      }
+    }
+
+    function deleteAcademicItem(id) {
+      plannerData.academic = plannerData.academic.filter(i => i.id !== id);
+      saveToStorage();
+      renderAcademicTable();
+    }
+
+    /* Timer Logic */
+    function togglePomodoroTimer() {
+      const btn = document.getElementById('timerToggleBtn');
+      if (isTimerRunning) {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        btn.innerText = "Resume Focus";
+      } else {
+        isTimerRunning = true;
+        btn.innerText = "Pause";
+        timerInterval = setInterval(() => {
+          if (timerSeconds > 0) {
+            timerSeconds--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            pomoCompletedToday++;
+            document.getElementById('pomoCount').innerText = pomoCompletedToday;
+            document.getElementById('pomoHours').innerText = `${pomoCompletedToday * 25} mins`;
+            resetPomodoroTimer();
+          }
+        }, 1000);
+      }
+    }
+
+    function resetPomodoroTimer() {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      timerSeconds = 25 * 60;
+      updateTimerDisplay();
+      document.getElementById('timerToggleBtn').innerText = "Start Focus";
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      document.getElementById('timerDisplay').innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    /* Creator Pipeline */
+    function renderCreatorPipeline() {
+      const stages = ['idea', 'script', 'edit', 'published'];
+      stages.forEach(s => {
+        const items = plannerData.creator.filter(c => c.stage === s);
+        document.getElementById(`count-${s}`).innerText = items.length;
+        const col = document.getElementById(`col-${s}`);
+        
+        col.innerHTML = items.map(item => `
+          <div class="p-3 rounded-xl border shadow-sm space-y-2">
+            <textarea rows="1" oninput="autoResizeTextarea(this); updateCreatorTitle(${item.id}, this.value);" class="auto-expand text-xs font-medium bg-transparent border-0 p-0 w-full focus:outline-none focus:ring-0">${item.title}</textarea>
+            <div class="flex justify-between items-center text-[10px]">
+              <select onchange="moveCreatorStage(${item.id}, this.value)" class="border rounded px-1.5 py-0.5">
+                <option value="idea" ${item.stage === 'idea' ? 'selected' : ''}>Idea</option>
+                <option value="script" ${item.stage === 'script' ? 'selected' : ''}>Scripting</option>
+                <option value="edit" ${item.stage === 'edit' ? 'selected' : ''}>Editing</option>
+                <option value="published" ${item.stage === 'published' ? 'selected' : ''}>Published</option>
+              </select>
+              <button type="button" onclick="deleteCreatorItem(${item.id})" class="text-earth-light hover:text-rose-600 p-1">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      });
+      triggerAllAutoResizes();
+    }
+
+    function updateCreatorTitle(id, text) {
+      const item = plannerData.creator.find(c => c.id === id);
+      if (item) {
+        item.title = text;
+        saveToStorage();
+      }
+    }
+
+    function moveCreatorStage(id, newStage) {
+      const item = plannerData.creator.find(c => c.id === id);
+      if (item) {
+        item.stage = newStage;
+        saveToStorage();
+        renderCreatorPipeline();
+      }
+    }
+
+    function deleteCreatorItem(id) {
+      plannerData.creator = plannerData.creator.filter(c => c.id !== id);
+      saveToStorage();
+      renderCreatorPipeline();
+    }
+
+    /* Pioneer Ministry Log */
+    function renderPioneerLog() {
+      const tbody = document.getElementById('pioneerTableBody');
+      let totalH = 0, totalP = 0, totalV = 0, totalRV = 0;
+
+      tbody.innerHTML = plannerData.pioneer.map(p => {
+        totalH += Number(p.hours || 0);
+        totalP += Number(p.placements || 0);
+        totalV += Number(p.videos || 0);
+        totalRV += Number(p.rvs || 0);
+
+        return `
+          <tr>
+            <td class="py-2 font-medium">${p.date}</td>
+            <td class="py-2 font-bold text-sage-800 dark:text-sage-200">${p.hours} hrs</td>
+            <td class="py-2 text-earth-muted">${p.placements || 0}</td>
+            <td class="py-2 text-earth-muted">${p.rvs || 0}</td>
+            <td class="py-2 text-earth-muted">${p.notes || '-'}</td>
+            <td class="py-2 text-right">
+              <button type="button" onclick="deletePioneerEntry(${p.id})" class="text-earth-light hover:text-rose-600 p-1">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('pioneerTotalHours').innerText = totalH;
+      document.getElementById('pioneerPlacements').innerText = totalP;
+      document.getElementById('pioneerVideos').innerText = totalV;
+      document.getElementById('pioneerRVs').innerText = totalRV;
+      lucide.createIcons();
+    }
+
+    function deletePioneerEntry(id) {
+      plannerData.pioneer = plannerData.pioneer.filter(p => p.id !== id);
+      saveToStorage();
+      renderPioneerLog();
+    }
+
+    function renderBibleStudies() {
+      const container = document.getElementById('bibleStudiesContainer');
+      container.innerHTML = plannerData.bibleStudies.map(b => `
+        <div class="p-3 border rounded-xl flex justify-between items-center text-xs">
+          <div>
+            <h4 class="font-bold">${b.name}</h4>
+            <p class="text-earth-muted text-[11px]">${b.book} • <span class="text-sage-800 dark:text-sage-300 font-medium">${b.schedule}</span></p>
+          </div>
+          <button type="button" onclick="deleteBibleStudy(${b.id})" class="text-earth-light hover:text-rose-600 p-1">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function deleteBibleStudy(id) {
+      plannerData.bibleStudies = plannerData.bibleStudies.filter(b => b.id !== id);
+      saveToStorage();
+      renderBibleStudies();
+    }
+
+    /* Family Hub */
+    function renderFamilyHub() {
+      const dutiesCol = document.getElementById('familyDutiesContainer');
+      dutiesCol.innerHTML = plannerData.familyDuties.map(d => `
+        <div class="flex items-start justify-between p-2.5 border rounded-xl">
+          <label class="flex items-start space-x-2.5 flex-grow cursor-pointer">
+            <input type="checkbox" ${d.done ? 'checked' : ''} onchange="toggleFamilyDuty(${d.id})" class="strikethrough-checked rounded text-sage-700 w-4 h-4 mt-0.5 flex-shrink-0">
+            <textarea rows="1" oninput="autoResizeTextarea(this); updateFamilyDutyText(${d.id}, this.value);" class="auto-expand bg-transparent border-0 p-0 text-xs w-full focus:outline-none focus:ring-0 ${d.done ? 'line-through opacity-50' : ''}">${d.title}</textarea>
+          </label>
+          <button type="button" onclick="deleteFamilyDuty(${d.id})" class="text-earth-light hover:text-rose-600 p-1 flex-shrink-0">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+
+      const eventsCol = document.getElementById('familyEventsContainer');
+      eventsCol.innerHTML = plannerData.familyEvents.map(e => `
+        <div class="p-3 border rounded-xl text-xs flex justify-between items-center">
+          <div>
+            <p class="font-semibold">${e.title}</p>
+            <p class="text-earth-muted text-[10px]">${e.date}</p>
+          </div>
+          <button type="button" onclick="deleteFamilyEvent(${e.id})" class="text-earth-light hover:text-rose-600 p-1">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+      triggerAllAutoResizes();
+    }
+
+    function updateFamilyDutyText(id, text) {
+      const duty = plannerData.familyDuties.find(d => d.id === id);
+      if (duty) {
+        duty.title = text;
+        saveToStorage();
+      }
+    }
+
+    function toggleFamilyDuty(id) {
+      const duty = plannerData.familyDuties.find(d => d.id === id);
+      if (duty) {
+        duty.done = !duty.done;
+        saveToStorage();
+        renderFamilyHub();
+      }
+    }
+
+    function deleteFamilyDuty(id) {
+      plannerData.familyDuties = plannerData.familyDuties.filter(d => d.id !== id);
+      saveToStorage();
+      renderFamilyHub();
+    }
+
+    function deleteFamilyEvent(id) {
+      plannerData.familyEvents = plannerData.familyEvents.filter(e => e.id !== id);
+      saveToStorage();
+      renderFamilyHub();
+    }
+
+    /* Transition Hub */
+    function renderTransitionHub() {
+      const container = document.getElementById('transitionTasksContainer');
+      container.innerHTML = plannerData.transitionTasks.map(t => `
+        <div class="flex items-start justify-between p-2.5 border rounded-xl">
+          <label class="flex items-start space-x-2.5 flex-grow cursor-pointer">
+            <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTransitionTask(${t.id})" class="strikethrough-checked rounded text-amber-600 w-4 h-4 mt-0.5 flex-shrink-0">
+            <textarea rows="1" oninput="autoResizeTextarea(this); updateTransitionTaskText(${t.id}, this.value);" class="auto-expand bg-transparent border-0 p-0 text-xs w-full focus:outline-none focus:ring-0 ${t.done ? 'line-through opacity-50' : ''}">${t.title}</textarea>
+          </label>
+          <button type="button" onclick="deleteTransitionTask(${t.id})" class="text-earth-light hover:text-rose-600 p-1 flex-shrink-0">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      `).join('');
+
+      const v = plannerData.transitionVision || {};
+      document.getElementById('visionStudent').value = v.student || "";
+      document.getElementById('visionCreator').value = v.creator || "";
+      document.getElementById('visionPioneer').value = v.pioneer || "";
+      document.getElementById('visionFamily').value = v.family || "";
+      document.getElementById('transitionLeaveBehind').value = v.leaveBehind || "";
+      document.getElementById('transitionMantra').value = v.mantra || "";
+
+      lucide.createIcons();
+      triggerAllAutoResizes();
+    }
+
+    function updateTransitionTaskText(id, text) {
+      const task = plannerData.transitionTasks.find(t => t.id === id);
+      if (task) {
+        task.title = text;
+        saveToStorage();
+      }
+    }
+
+    function toggleTransitionTask(id) {
+      const task = plannerData.transitionTasks.find(t => t.id === id);
+      if (task) {
+        task.done = !task.done;
+        saveToStorage();
+        renderTransitionHub();
+      }
+    }
+
+    function deleteTransitionTask(id) {
+      plannerData.transitionTasks = plannerData.transitionTasks.filter(t => t.id !== id);
+      saveToStorage();
+      renderTransitionHub();
+    }
+
+    function saveTransitionVision() {
+      plannerData.transitionVision = {
+        student: document.getElementById('visionStudent').value,
+        creator: document.getElementById('visionCreator').value,
+        pioneer: document.getElementById('visionPioneer').value,
+        family: document.getElementById('visionFamily').value,
+        leaveBehind: document.getElementById('transitionLeaveBehind').value,
+        mantra: document.getElementById('transitionMantra').value
+      };
+      saveToStorage();
+    }
+  </script>
+</body>
+</html>
